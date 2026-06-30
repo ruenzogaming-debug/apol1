@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You, My Love</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe5ec, #ffb3c6, #ff85a1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        .heart-bg {
+            position: absolute;
+            color: rgba(255, 75, 110, 0.2);
+            font-size: 24px;
+            animation: floatUp 6s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 8px 32px 0 rgba(255, 75, 110, 0.15);
+            text-align: center;
+            z-index: 10;
+            position: relative;
+        }
+
+        .audio-player {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .music-btn {
+            background: #ff4b6e;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-info {
+            font-size: 14px;
+            color: #4a4a4a;
+            font-weight: 500;
+        }
+
+        .envelope-wrapper {
+            cursor: pointer;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+        .envelope-icon {
+            font-size: 70px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        .content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .content.show {
+            display: block;
+            opacity: 1;
+        }
+
+        h1 {
+            color: #d90429;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .letter-box {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: left;
+            line-height: 1.6;
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 30px;
+            max-height: 250px;
+            overflow-y: auto;
+            border-left: 5px solid #ff4b6e;
+        }
+
+        .gallery-title {
+            color: #ff4b6e;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .photo-frame {
+            background: white;
+            padding: 6px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transform: rotate(var(--r));
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            aspect-ratio: 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #eee;
+        }
+
+        .photo-frame:hover {
+            transform: rotate(0deg) scale(1.1);
+            z-index: 20;
+        }
+
+        /* Binago ito para makita ang BUONG image nang hindi pinuputol */
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            background-color: #fcfcfc; /* Magaan na background kung sakaling may space sa gilid */
+        }
+
+        .img-placeholder {
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            height: 50px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-accept {
+            background: #ff4b6e;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #6c757d;
+            color: white;
+            position: relative;
+        }
+
+        .letter-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .letter-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        .letter-box::-webkit-scrollbar-thumb {
+            background: rgba(255, 75, 110, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BACKGROUND MUSIC SETUP (Hidden, Set to Autoplay & Loop) -->
+    <audio id="bg-music" src="c:\Users\timmo\OneDrive\Desktop\kiki\Pahintulot -Shirebound & Busking (Lyrics) [U2rbkUuWlbg] (1).mp3" preload="auto" loop></audio>
+
+    <div class="container" id="main-card">
+        
+        <!-- Interactive Music Widget Status -->
+        <div class="audio-player">
+            <button class="music-btn" id="play-pause-btn" onclick="toggleMusic()">▶</button>
+            <div class="music-info" id="music-status">Music will play when opened 🎵</div>
+        </div>
+
+        <!-- Envelope Screen -->
+        <div id="envelope-screen" class="envelope-wrapper" onclick="openLetter()">
+            <div class="envelope-icon">✉️</div>
+            <p style="color: #4a4a4a; font-weight: 600; margin-top: 10px;">You have a letter. Click to open it.</p>
+        </div>
+
+        <!-- Letter & Gallery Content -->
+        <div id="letter-content" class="content">
+            <h1>Hi Loveloveeee... </h1>
+            
+            <div class="letter-box">
+                <p>To My Dearest Maritot,</p><br>
+                <p>Im sorry mahal to those recently fights and arguments natinn iknowww you still have the weghts of itt and it really lingerss meee.</p><br>
+                <p>Hindi man madali after peroo ill try to make us  mahal secure even tho may mga bagay tayo na hnd madaling intindihin and seekkk changes to improve our growthhhh poo .</p><br>
+                <p>Rememmber those old days when we tell each other deeply? thats why anlalim na ng pinagsamahan natin and i won't give up easily on us ok? Mahal na mahal kitaa pooo and always seeking forward for bothof us and for the future of us crossing the pathhh.
+                </p><br>
+                <p>Sorrry mhallllllllll for what i let it slideeee poo I wanna be better for our kids and usss pooooo i just cant pooo na mawala tayo kahit ano mang changesss i know hnd na to formal but nilalamon nanaman ako ng emosyonn ko sa paraang magiging desperate akoo.
+                I love uu so muchhhh mahallllll you bring me for who i am today and pano ko nakayanan lahatttttt at marami ring sitwasyon mas naging maiwasin at mapagkumbaba ako sa paraang mamahalin mo ako sa ikabubutiiii pooo.
+                We may never find a replacement to each other but rather seeks improvement us on how we face life togeteherr. iloveyou somuchhh mhalll kooooo Mariieeee Rose Aquino Valenciaaaaa
+                </p><br>
+                <p>Meantfully yours,<br>Timmothy Gerona</p>
+            </div>
+
+            <div class="gallery-title">Sana nagkaminiversion ako netooo mwheheheh👇👇</div>
+            <div class="photo-gallery">
+                <!-- Unang Photo frame gamit ang 'eyes.jpg' -->
+                <div class="photo-frame" style="--r: -4deg;">
+                    <img src="eyes.jpg" alt="My Love">
+                </div>
+                <!-- Pangalawang Larawan (Palitan lang ang 'dalaga.jpg' kung iba ang filename) -->
+                <div class="photo-frame" style="--r: 3deg;">
+                    <img src="dalaga.jpg" alt="My Love 2">
+                </div>
+                <!-- Pangatlong Larawan (Palitan ang 'us3.jpg' ng gusto mong filename) -->
+                <div class="photo-frame" style="--r: -2deg;">
+                    <img src="id.jpg" alt="My Love 3">
+                </div>
+            </div>
+
+            <!-- Choices -->
+            <div class="decision-box">
+                <h3 style="color:#4a4a4a; margin-bottom:15px;">Bati na tayo pls?😔😔 </h3>
+                <div class="btn-group">
+                    <button class="btn btn-accept" onclick="forgiveMe()">Yes</button>
+                    <button class="btn btn-reject" id="no-btn" onmouseover="dodgeButton()" onclick="dodgeButton()">No</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Background Floating Effects
+        function createFloatingHearts() {
+            const symbols = ['❤️', '💖', '🌸', '✨', '💕'];
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart-bg');
+                heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = Math.random() * 15 + 15 + 'px';
+                document.body.appendChild(heart);
+            }
+        }
+        createFloatingHearts();
+
+        const music = document.getElementById('bg-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const musicStatus = document.getElementById('music-status');
+
+        // Play/Pause Controller Toggle
+        function toggleMusic() {
+            if (music.paused) {
+                music.play().catch(e => console.log("Playback interaction required."));
+                playPauseBtn.innerText = '⏸';
+                musicStatus.innerText = 'Playing music... 🌟';
+            } else {
+                music.pause();
+                playPauseBtn.innerText = '▶';
+                musicStatus.innerText = 'Music paused';
+            }
+        }
+
+        // Open Letter Trigger (Autoplays music automatically here)
+        function openLetter() {
+            document.getElementById('envelope-screen').style.display = 'none';
+            document.getElementById('letter-content').classList.add('show');
+            
+            // Forces music to autoplay and handle loop requirements instantly
+            music.play().then(() => {
+                playPauseBtn.innerText = '⏸';
+                musicStatus.innerText = 'Playing music... 🌟';
+            }).catch(error => {
+                console.log("Autoplay fail safe backup triggered.");
+            });
+        }
+
+        // Runaway Button Logic
+        function dodgeButton() {
+            const noBtn = document.getElementById('no-btn');
+            const randomX = Math.floor(Math.random() * 140) - 70; 
+            const randomY = Math.floor(Math.random() * 40) - 20; 
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        }
+
+        // Happy Ending Function
+        function forgiveMe() {
+            document.getElementById('main-card').innerHTML = `
+                <h1 style="font-size: 40px; animation: pulse 1s infinite;">❤️ Thank You ❤️</h1>
+                <p style="font-size: 18px; color: #4a4a4a; line-height: 1.6; margin-top: 20px;">
+                    You have no idea how much this means to me. Thank you for your grace. I love you! 🥰
+                </p>
+                <div style="font-size: 60px; margin-top: 20px;">👩‍❤️‍👨</div>
+            `;
+            setInterval(() => {
+                const fastHeart = document.createElement('div');
+                fastHeart.classList.add('heart-bg');
+                fastHeart.innerText = '❤️';
+                fastHeart.style.left = Math.random() * 100 + 'vw';
+                fastHeart.style.animationDuration = '2s';
+                document.body.appendChild(fastHeart);
+            }, 100);
+        }
+    </script>
+</body>
+</html>
